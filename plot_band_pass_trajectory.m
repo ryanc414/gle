@@ -2,6 +2,8 @@
 % Plots a particle trajectory for band-pass filtered coloured noise.  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Number of spatial dimensions to simulate.
+D = 2;
 
 % Physical constants
 k_B = 0.8314;  % Boltzmann constant in A^2 amu ps^-2 K^-1
@@ -21,8 +23,8 @@ A = [delta, sqrt(gamma / t_H), - sqrt(gamma / t_L); ...
             sqrt(gamma / t_L), 0, 1 / t_L];
 
 % Specify initial conditions:
-initial_position = [0, 0];  % initial position in x-y plane
-initial_momentum = zeros(2, length(A));  
+initial_position = zeros(D, 1);  % initial position in x-y plane
+initial_momentum = zeros(D, length(A));  
 
 % Calculate the rest of the params needed by the GLE solver:
 params = calculate_sim_params(k_B, N, T, mass, A);
@@ -33,7 +35,7 @@ params.stop_time = N * params.sample_time;
 
 % Now run the simulation:
 tic;
-[r, p, t] = sim_gle_2d(params, initial_position, initial_momentum);
+[r, p, t] = sim_gle(params, initial_position, initial_momentum, D);
 toc;
 
 % Finally, plot position data. 

@@ -1,9 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Plots a particle trajectory for delta-like filtered coloured noise.  
+% Plots a particle trajectory in 3D for low-pass filtered coloured noise.  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Number of spatial dimensions to simulate.
-D = 2;
+D = 3;
 
 % Physical constants
 k_B = 0.8314;  % Boltzmann constant in A^2 amu ps^-2 K^-1
@@ -14,24 +14,20 @@ mass = 20;  % particle mass / amu
 T = 298.0;  % temperature / K
 
 % Specify A matrix here to control GLE behaviour:
-gamma = 1;  % friction coefficient / THz
-t_F = 2 * pi;  % time constant of the memory kernel
-w0 = 0.2;
-dw = 0.1;
-
-A = [0, sqrt(gamma / t_F), sqrt(gamma / t_F); ...
-     - sqrt(gamma / t_F), dw, w0; ...
-     - sqrt(gamma / t_F), -w0, dw];
+gamma = 1;
+tau = 10;
+A = [0, - sqrt(gamma / tau); ...
+     sqrt(gamma / tau), 1 / tau];
 
 % Specify initial conditions:
-initial_position = zeros(D, 1);  % initial position in x-y plane
+initial_position = zeros(D, 1);  % initial position 
 initial_momentum = zeros(D, length(A));  
 
 % Calculate the rest of the params needed by the GLE solver:
 params = calculate_sim_params(k_B, N, T, mass, A);
 
 % Manually specify other parameters here:
-params.sample_time = 5E-3;
+params.sample_time = (2 * pi) / 1000.0;
 params.stop_time = N * params.sample_time;
 
 % Now run the simulation:
@@ -41,9 +37,10 @@ toc;
 
 % Finally, plot position data. 
 figure;
-plot(r(:, 1), r(:, 2));
+plot3(r(:, 1), r(:, 2), r(:, 3));
 xlabel('x / $\rm{\AA}$', 'interpreter', 'LaTex');
 ylabel('y / $\rm{\AA}$', 'interpreter', 'LaTex');
+zlabel('z / $\rm{\AA}$', 'interpreter', 'LaTex');
 axis equal;
 
 % Save figure to disk as a .png

@@ -42,7 +42,7 @@ end
 function r = sim_position(params, r_init, p_init)
     % Simulate using params, return position data and the last position and
     % momenta.
-    [r, p, t] = sim_gle_2d(params, r_init, p_init);
+    [r, p, t] = sim_gle(params, r_init, p_init, length(r_init));
 end
 
 

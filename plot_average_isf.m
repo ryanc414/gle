@@ -2,6 +2,8 @@
 % Plot the average ISF, averaged over N_runs trajectories.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Number of spatial dimensions to simulate.
+D = 2;
 
 N_runs = 10;
 dk = (1 / sqrt(2)) * [1, 1];  % Specify dk as a 2D vector.
@@ -21,8 +23,8 @@ A = [0, - sqrt(gamma / tau); ...
      sqrt(gamma / tau), 1 / tau];
 
 % Specify initial conditions.
-r_init = [0; 0];
-p_init = zeros(2, length(A));  
+r_init = zeros(D, 1);
+p_init = zeros(D, length(A));  
 
 % Calculate the rest of the simulation parameters based on these.
 params = calculate_sim_params(k_B, N_steps, T, mass, A);
@@ -30,11 +32,6 @@ params = calculate_sim_params(k_B, N_steps, T, mass, A);
 % Manually set the sample time
 params.sample_time = (2 * pi) / 1000.0;
 params.stop_time = N_steps * params.sample_time;
-
-% Set the seed values for the white-noise source.
-%seed_limit = 100000;
-%rng('shuffle');
-%params.seed_values = randi(seed_limit, 2, 1);
 
 % Calcualate the average ISF of N runs
 tic;
